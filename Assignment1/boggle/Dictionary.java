@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.TreeSet;
 
 /**
@@ -52,7 +53,8 @@ public class Dictionary {
      * @return  A boolean indicating if the word has been found
      */
     public boolean containsWord(String word) {
-        throw new UnsupportedOperationException(); //change this!!
+        String caseignore = word.toLowerCase();
+        return this.legalWords.contains(caseignore);
     }
 
     /* 
@@ -62,7 +64,15 @@ public class Dictionary {
      * @return  A boolean indicating if the string has been found as a prefix
      */
     public boolean isPrefix(String str) {
-        throw new UnsupportedOperationException(); //change this!!
+        Iterator<String> treeitr = this.legalWords.iterator();
+        String element = "";
+        while(treeitr.hasNext()){
+            element = treeitr.next();
+            if (element.startsWith(str)){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

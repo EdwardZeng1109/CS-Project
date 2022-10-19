@@ -20,7 +20,8 @@ public class BoggleGrid {
      * @param size  The size of the Boggle grid to initialize
      */
     public BoggleGrid(int size) {
-        throw new UnsupportedOperationException(); //change this!!
+        this.size = size;
+        this.board = new char[size][size];
     }
 
     /* 
@@ -30,7 +31,13 @@ public class BoggleGrid {
      * @param letters a string of letters, one for each grid position.
      */
     public void initalizeBoard(String letters) {
-        throw new UnsupportedOperationException(); //change this!!
+        int acc = 0;
+        for (int row = 0; row < size - 1; row++){
+            for(int col = 0; col < size - 1; col++){
+                this.board[row][col] = letters.charAt(acc);
+                acc++;
+            }
+        }
     }
 
     /*
