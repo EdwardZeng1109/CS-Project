@@ -66,9 +66,10 @@ public class Dictionary {
     public boolean isPrefix(String str) {
         Iterator<String> treeitr = this.legalWords.iterator();
         String element = "";
+        String lowercase = str.toLowerCase();
         while(treeitr.hasNext()){
             element = treeitr.next();
-            if (element.startsWith(str)){
+            if (element.startsWith(lowercase)){
                 return true;
             }
         }

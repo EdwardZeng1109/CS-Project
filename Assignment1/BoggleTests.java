@@ -29,7 +29,11 @@ public class BoggleTests {
         Map<String, ArrayList<Position>> allWords = new HashMap<>();
         BoggleGrid grid = new BoggleGrid(4);
         grid.initalizeBoard("RHLDNHTGIPHSNMJO");
+        System.out.println(grid.toString());
         Object r = method.invoke(game, allWords, boggleDict, grid);
+        System.out.println(allWords);
+        System.out.println(allWords.containsKey("host"));
+        System.out.println(allWords.values());
 
         Set<String> expected = new HashSet<>(Arrays.asList("GHOST", "HOST", "THIN"));
         assertEquals(expected, allWords.keySet());
@@ -69,6 +73,41 @@ public class BoggleTests {
         stats.endRound();
         stats.endRound();
         assertEquals(3, stats.getRound());
+    }
+
+    @Test
+    void borarddisplayTest() {
+        BoggleGame game = new BoggleGame();
+        /*String input = game.randomizeLetters(4);
+        System.out.println(input);
+        BoggleGrid grid = new BoggleGrid(4);
+        grid.initalizeBoard(input);
+        System.out.println(grid.toString());*/
+    }
+
+    @Test
+    void prefixTest() {
+        String check = "aba";
+        Dictionary d = new Dictionary("list2.txt");
+        System.out.println(d.isPrefix(check));
+    }
+
+    @Test
+    void findAllWords_s() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        BoggleGame game = new BoggleGame();
+        Method method = game.getClass().getDeclaredMethod("findAllWords", Map.class, Dictionary.class, BoggleGrid.class);
+        method.setAccessible(true);
+
+        Dictionary boggleDict = new Dictionary("list2.txt");
+        Map<String, ArrayList<Position>> allWords = new HashMap<>();
+        BoggleGrid grid = new BoggleGrid(4);
+        grid.initalizeBoard("RHLDNHTGIPHSNMJO");
+        System.out.println(grid.toString());
+        Object r = method.invoke(game, allWords, boggleDict, grid);
+        System.out.println(allWords.keySet());
+
+        Set<String> expected = new HashSet<>(Arrays.asList("GHOST", "HOST", "THIN"));
+        assertEquals(expected, allWords.keySet());
     }
 
 }

@@ -157,8 +157,27 @@ public class BoggleGame {
      *
      * @return String a String of random letters (length 16 or 25 depending on the size of the grid)
      */
-    private String randomizeLetters(int size){
-        throw new UnsupportedOperationException(); //change this!!
+    private String randomizeLetters(int size) {
+        String result = "";
+        if (size == 4) {
+            Random r = new Random();
+            List<String> dicelist = Arrays.asList(dice_small_grid);
+            Collections.shuffle(dicelist);
+            for (int i = 0; i < dicelist.size(); i++) {
+                int index = r.nextInt(6);
+                result += Character.toLowerCase(dicelist.get(i).charAt(index));
+            }
+        } else {
+            Random r = new Random();
+            List<String> dicelist = Arrays.asList(dice_big_grid);
+            Collections.shuffle(dicelist);
+            for (int i = 0; i < dicelist.size(); i++) {
+                int index = r.nextInt(6);
+
+                result += Character.toLowerCase(dicelist.get(i).charAt(index));
+            }
+        }
+        return result;
     }
 
 
@@ -192,7 +211,62 @@ public class BoggleGame {
      * @param boggleGrid A boggle grid, with a letter at each position on the grid
      */
     private void findAllWords(Map<String,ArrayList<Position>> allWords, Dictionary boggleDict, BoggleGrid boggleGrid) {
-        throw new UnsupportedOperationException(); //change this!!
+        ArrayList<Position> lstP = new ArrayList<Position>();
+        String str = "";
+        for(int row = 0; row < boggleGrid.numRows(); row++){
+            for(int col = 0; col < boggleGrid.numCols(); col++){
+                words(allWords, boggleDict, boggleGrid, row, col, lstP, str);
+            }
+        }
+    }
+
+    /*
+     * Helper function for findAllWords. This is a recursive function,
+     * which put paired string and list of position to the variable allWords.
+     *
+     * @param allWords A mutable list of all legal words that can be found, given the boggleGrid grid letters
+     * @param boggleDict A dictionary of legal words
+     * @param boggleGrid A boggle grid, with a letter at each position on the grid
+     * @param row The row for current char
+     * @param col The col for current char
+     * @param plst An arraylist of all dice position
+     * @param str A string of currently formed word
+     */
+    private void words(Map<String,ArrayList<Position>> allWords, Dictionary boggleDict, BoggleGrid boggleGrid, int row, int col, ArrayList<Position> plst, String str){
+        str += boggleGrid.getCharAt(row, col);
+        str = str.toLowerCase();
+        Position p = new Position(row, col);
+        plst.add(p);
+        if(boggleDict.isPrefix(str)){
+            if(plst.size() >= 4 && allWords.containsKey(str) == false && boggleDict.containsWord(str)){
+                allWords.put(str, plst);
+            }
+            for(int i = row - 1; i <= row + 1  && i < boggleGrid.numRows(); i++){
+                for(int j = col - 1; j <= col + 1  && j < boggleGrid.numCols(); j++){
+                    if(i >= 0 && j >= 0 && itrPositionlst(plst, i, j) == false){
+                        words(allWords, boggleDict, boggleGrid,i, j, plst, str);
+                    }
+                }
+            }
+        }
+        plst.remove(p);
+    }
+
+    /*
+     * A Helper function for words. This returns a boolean value. If the current position of (i, j) is in the position list returns true else returns false
+     *
+     * @param plst An arraylist of all dice position
+     * @param i The row for current char
+     * @param j The col for current char
+     * @return boolean value true or false
+     */
+    private boolean itrPositionlst(ArrayList<Position> plst, int i, int j){
+        for(Position p1: plst){
+            if (p1.getRow() == i && p1.getCol() == j){
+                return true;
+            }
+        }
+        return false;
     }
 
     /* 
@@ -211,9 +285,23 @@ public class BoggleGame {
             //step 1. Print the board for the user, so they can scan it for words
             //step 2. Get a input (a word) from the user via the console
             //step 3. Check to see if it is valid (note validity checks should be case-insensitive)
-            //step 4. If it's valid, update the player's word list and score (stored in boggleStats)
+            //step 4. If it's valid, update the player's word list and schore (stored in boggleStats)
             //step 5. Repeat step 1 - 4
             //step 6. End when the player hits return (with no word choice).
+            System.out.println(board.toString());
+            System.out.println("Enter the word you found: ");
+            String word = this.scanner.nextLine();
+            word = word.toLowerCase();
+            if(allWords.containsKey(word) && this.gameStats.getPlayerWords().contains(word) == false){
+                this.gameStats.addWord(word, BoggleStats.Player.Human);
+                System.out.println("Your word is valid!");
+            }
+            else if (word.isEmpty()) {
+                System.out.println("Your Round is End");
+                break;
+            } else{
+                System.out.println("Your word does not meet the conditions. Therefore, you don't get any score");
+            }
         }
     }
 
@@ -227,7 +315,11 @@ public class BoggleGame {
      * @param allWords A mutable list of all legal words that can be found, given the boggleGrid grid letters
      */
     private void computerMove(Map<String,ArrayList<Position>> all_words){
-        throw new UnsupportedOperationException(); //change this!!
+        for(Map.Entry<String, ArrayList<Position>> m: all_words.entrySet()){
+            if(this.gameStats.getPlayerWords().contains(m.getKey()) == false){
+                this.gameStats.addWord(m.getKey(), BoggleStats.Player.Computer);
+            }
+        }
     }
 
 }

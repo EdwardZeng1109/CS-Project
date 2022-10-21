@@ -1,6 +1,7 @@
 package boggle;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -44,8 +45,15 @@ public class BoggleStats {
     /**
      * the current round being played
      */  
-    private int round; 
-
+    private int round;
+    /**
+     * the total words found by player
+     */
+    private int pTotalwords;
+    /**
+     * the total words found by computer
+     */
+    private int cTotalwords;
     /**
      * enumarable types of players (human or computer)
      */  
@@ -64,7 +72,17 @@ public class BoggleStats {
      * Initializes word lists (which are sets) for computer and human players.
      */
     public BoggleStats() {
-        throw new UnsupportedOperationException(); //change this!!
+        this.round = 0;
+        this.pScore = 0;
+        this.pScoreTotal = 0;
+        this.pAverageWords = 0;
+        this.cScore = 0;
+        this.cScoreTotal = 0;
+        this.cAverageWords = 0;
+        this.pTotalwords = 0;
+        this.cTotalwords = 0;
+        this.playerWords = new HashSet<String>();
+        this.computerWords = new HashSet<String>();
     }
 
     /* 
@@ -75,7 +93,24 @@ public class BoggleStats {
      * @param player  The player to whom the word was awarded
      */
     public void addWord(String word, Player player) {
-        throw new UnsupportedOperationException(); //change this!!
+        if (player == Player.Human){
+            this.playerWords.add(word);
+            if(word.length() == 4){
+                this.pScore += 1;
+            }
+            else{
+                this.pScore += word.length() - 4 + 1;
+            }
+        }
+        else{
+            this.computerWords.add(word);
+            if(word.length() == 4){
+                this.cScore += 1;
+            }
+            else{
+                this.cScore += word.length() - 4 + 1;
+            }
+        }
     }
 
     /* 
@@ -86,7 +121,19 @@ public class BoggleStats {
      * Finally, increment the current round number by 1.
      */
     public void endRound() {
-        throw new UnsupportedOperationException(); //change this!!
+        int pWordslen = this.playerWords.size();
+        int cWordslen = this.computerWords.size();
+        this.pTotalwords += pWordslen;
+        this.cTotalwords += cWordslen;
+        this.pScoreTotal += this.pScore;
+        this.cScoreTotal += this.cScore;
+        this.pScore = 0;
+        this.cScore = 0;
+        this.round += 1;
+        this.pAverageWords = this.pTotalwords / round;
+        this.cAverageWords = this.cTotalwords / round;
+        this.playerWords.clear();
+        this.computerWords.clear();
     }
 
     /* 
@@ -96,7 +143,22 @@ public class BoggleStats {
      * Each player's score this round.
      */
     public void summarizeRound() {
-        throw new UnsupportedOperationException(); //change this!!
+        Iterator<String> pIter = this.playerWords.iterator();
+        Iterator<String> cIter = this.computerWords.iterator();
+        int pWordslen = this.playerWords.size();
+        int cWordslen = this.computerWords.size();
+        System.out.println("The total number of words found by player in this round is: " + pWordslen);
+        System.out.println("The player's score in this round is: " + this.pScore);
+        System.out.println("The words found by player are listed below: ");
+        while (pIter.hasNext()){
+            System.out.println(pIter.next());
+        }
+        System.out.println("The total number of words found by computer in this round is: " + cWordslen);
+        System.out.println("The computer's score in this round is: " + this.cScore);
+        System.out.println("The words found by computer are listed below: ");
+        while (cIter.hasNext()){
+            System.out.println(cIter.next());
+        }
     }
 
     /* 
@@ -106,7 +168,11 @@ public class BoggleStats {
      * The average number of words found by each player per round.
      */
     public void summarizeGame() {
-        throw new UnsupportedOperationException(); //change this!!
+        System.out.println("The total number of rounds played is: " + this.round);
+        System.out.println("The total score for player is: " + this.pScoreTotal);
+        System.out.println("The average number of words found by player is: " + this.pAverageWords);
+        System.out.println("The total score for computer is: " + this.cScoreTotal);
+        System.out.println("The average number of words found by computer is: " + this.cAverageWords);
     }
 
     /* 

@@ -32,8 +32,8 @@ public class BoggleGrid {
      */
     public void initalizeBoard(String letters) {
         int acc = 0;
-        for (int row = 0; row < size - 1; row++){
-            for(int col = 0; col < size - 1; col++){
+        for (int row = 0; row < size; row++){
+            for(int col = 0; col < size; col++){
                 this.board[row][col] = letters.charAt(acc);
                 acc++;
             }
